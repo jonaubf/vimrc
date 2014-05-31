@@ -1,0 +1,104 @@
+set nocompatible
+filetype on
+filetype plugin on
+"colorscheme desert256
+colorscheme solarized
+set tabstop=4
+set shiftwidth=4
+set smarttab
+set expandtab
+"set smartindent
+set softtabstop=4
+set autoindent
+"syntax on 
+
+
+set wildmenu
+set wcm=<TAB>
+" Юникод
+menu Encoding.UTF-8 :e ++enc=utf-8<CR>
+" Кириллические кодировки
+menu Encoding.KOI8-U :e ++enc=koi8-u<CR>
+menu Encoding.CP1251 :e ++enc=cp1251<CR>
+menu Encoding.IBM-866 :e ++enc=ibm866<CR>
+map  <F7> :emenu Encoding.<TAB>
+"
+" Меню для выбора типа файла (DOS, UNIX, Mac)
+"    menu FileFormat.UNIX         :e ++ff=unix
+"    menu FileFormat.DOS          :e ++ff=dos
+"    menu FileFormat.Mac          :e ++ff=mac
+" Определяем сочетание клавиш Shift+F8 для вызова этого меню
+"    map  :emenu FileFormat. 
+
+
+let python_highlight_all = 1
+set t_Co=256
+
+"Перед сохранением вырезаем пробелы на концах (только в .py файлах)
+autocmd BufWritePre *.py normal m`:%s/\s\+$//e ``
+"В .py файлах включаем умные отступы после ключевых слов
+autocmd BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
+
+let g:snippetsEmu_key = "<C-j>"
+
+" Копи/паст по Ctrl+C/Ctrl+V
+vmap <C-C> "+yi
+imap <C-V> "+gPi
+
+syntax on "Включить подсветку синтаксиса
+set nu "Включаем нумерацию строк
+set mousehide "Спрятать курсор мыши когда набираем текст
+set mouse=a "Включить поддержку мыши
+set termencoding=utf-8 "Кодировка терминала
+set novisualbell "Не мигать
+set t_vb= "Не пищать! (Опции 'не портить текст', к сожалению, нету)
+
+"Удобное поведение backspace
+set backspace=indent,eol,start whichwrap+=<,>,[,]
+
+""Вырубаем черточки на табах
+set showtabline=0
+
+"Колоночка, чтобы показывать плюсики для скрытия блоков кода:
+set foldcolumn=1
+"
+""Переносим на другую строчку, разрываем строки
+set wrap
+set linebreak
+
+"Вырубаем .swp и ~ (резервные) файлы
+set nobackup
+set noswapfile
+
+" supertab
+au FileType python set omnifunc=pythoncomplete#Complete
+au FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+au FileType html set omnifunc=htmlcomplete#CompleteTags
+au FileType css set omnifunc=csscomplete#CompleteCSS
+
+let g:SuperTabDefaultCompletionType = "context"
+set completeopt=menuone,longest,preview
+
+
+" NERDTree
+nmap <silent> <F2> :NERDTreeToggle<CR>
+imap <silent> <F2> :NERDTreeToggle<CR>
+let NERDTreeIgnore = ['\.pyc$']
+
+" Django templates
+au! BufNewFile,BufRead *.html set filetype=htmldjango
+
+" No switch keyboard layout for commands in normal mode.
+set langmap=ёйцукенгшщзхъфывапролджэячсмитьбюЁЙЦУКЕHГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ;`qwertyuiop[]asdfghjkl\\;'zxcvbnm\\,.~QWERTYUIOP{}ASDFGHJKL:\\"ZXCVBNM<>
+
+" Add the virtualenv's site-packages to vim path
+py << EOF
+import os.path
+import sys
+import vim
+if 'VIRTUAL_ENV' in os.environ:
+    project_base_dir = os.environ['VIRTUAL_ENV']
+    sys.path.insert(0, project_base_dir)
+    activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+    execfile(activate_this, dict(__file__=activate_this))
+EOF
